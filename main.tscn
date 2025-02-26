@@ -1,0 +1,221 @@
+[gd_scene load_steps=14 format=3 uid="uid://cppt2mpb26gh4"]
+
+[ext_resource type="Script" path="res://CombatSystem.gd" id="1_6ilnu"]
+[ext_resource type="Texture2D" uid="uid://dur7nq7mopiwo" path="res://sprites/ninja.png" id="2_k7hot"]
+[ext_resource type="Texture2D" uid="uid://bp5yk8s2tkwuv" path="res://sprites/goblin.peasant.png" id="3_t7831"]
+[ext_resource type="Texture2D" uid="uid://c3i30ua3vqp3j" path="res://sprites/sword_icon.png" id="4_05k84"]
+[ext_resource type="AudioStream" uid="uid://8mnlinyqg03s" path="res://sound effects/classic_hurt.mp3" id="4_mufwu"]
+[ext_resource type="AudioStream" uid="uid://34238xfnm4rg" path="res://sound effects/sword-clash-241729.mp3" id="5_dg0r7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sgo14"]
+bg_color = Color(0.6, 0.6, 0.6, 0.509804)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ong5o"]
+bg_color = Color(0.75339, 3.20069e-06, 3.85046e-07, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k12x3"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bhpuj"]
+bg_color = Color(0.392157, 0.364706, 0.588235, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d0vpo"]
+bg_color = Color(0.6, 0.6, 0.6, 0.509804)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g4ko1"]
+bg_color = Color(0.881077, 0.867765, 0.274662, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fm38j"]
+bg_color = Color(0.270588, 0.435294, 0.270588, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_6ilnu")
+
+[node name="Player" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+texture_filter = 1
+position = Vector2(352, 296)
+scale = Vector2(4, 4)
+texture = ExtResource("2_k7hot")
+region_enabled = true
+region_rect = Rect2(7, 19, 16, 45)
+
+[node name="PlayerHitTimer" type="Timer" parent="Player"]
+unique_name_in_owner = true
+wait_time = 0.05
+
+[node name="PlayerHurtSound" type="AudioStreamPlayer2D" parent="Player"]
+unique_name_in_owner = true
+stream = ExtResource("4_mufwu")
+pitch_scale = 1.5
+
+[node name="Enemy" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Enemy"]
+texture_filter = 1
+position = Vector2(792, 304)
+scale = Vector2(5, 5)
+texture = ExtResource("3_t7831")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(4, 30, 17, 34)
+
+[node name="EnemyHitTimer" type="Timer" parent="Enemy"]
+unique_name_in_owner = true
+wait_time = 0.05
+
+[node name="EnemyHurtSound" type="AudioStreamPlayer2D" parent="Enemy"]
+unique_name_in_owner = true
+stream = ExtResource("4_mufwu")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PlayerHUD" type="Control" parent="Control"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PlayerHealthBar" type="ProgressBar" parent="Control/PlayerHUD"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 32.0
+offset_top = 24.0
+offset_right = 432.0
+offset_bottom = 44.0
+theme_override_styles/background = SubResource("StyleBoxFlat_sgo14")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ong5o")
+value = 100.0
+show_percentage = false
+
+[node name="PlayerAttackBar" type="ProgressBar" parent="Control/PlayerHUD"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 256.0
+offset_top = 408.0
+offset_right = 456.0
+offset_bottom = 435.0
+theme_override_styles/background = SubResource("StyleBoxFlat_k12x3")
+theme_override_styles/fill = SubResource("StyleBoxFlat_bhpuj")
+show_percentage = false
+
+[node name="PlayerStaminaBar" type="ProgressBar" parent="Control/PlayerHUD"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 32.0
+offset_top = 48.0
+offset_right = 332.0
+offset_bottom = 63.0
+theme_override_styles/background = SubResource("StyleBoxFlat_d0vpo")
+theme_override_styles/fill = SubResource("StyleBoxFlat_g4ko1")
+value = 100.0
+show_percentage = false
+
+[node name="EnemyHUD" type="Control" parent="Control"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="EnemyHealthBar" type="ProgressBar" parent="Control/EnemyHUD"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 720.0
+offset_top = 32.0
+offset_right = 1120.0
+offset_bottom = 52.0
+theme_override_styles/background = SubResource("StyleBoxFlat_sgo14")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ong5o")
+value = 100.0
+fill_mode = 1
+show_percentage = false
+
+[node name="EnemyAttackBar" type="ProgressBar" parent="Control/EnemyHUD"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 696.0
+offset_top = 408.0
+offset_right = 896.0
+offset_bottom = 435.0
+theme_override_styles/background = SubResource("StyleBoxFlat_k12x3")
+theme_override_styles/fill = SubResource("StyleBoxFlat_fm38j")
+fill_mode = 1
+show_percentage = false
+
+[node name="ParrySuccess" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(576, 264)
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("4_05k84")
+
+[node name="SwordClash" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("5_dg0r7")
+attenuation = 2.0
+
+[connection signal="timeout" from="Player/PlayerHitTimer" to="." method="_on_player_hit_timer_timeout"]
+[connection signal="timeout" from="Player/PlayerHitTimer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="Enemy/EnemyHitTimer" to="." method="_on_enemy_hit_timer_timeout"]

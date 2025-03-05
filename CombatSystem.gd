@@ -32,9 +32,15 @@ var enemy_attack_speed = 2.0
 var enemy_attack_timer = 0.0
 var enemy_attack_interval = 2.5  # Time between enemy attacks
 var enemy_attack_progress = 0.0
-var enemy_attack_successful = false  # Track if enemy attack lands
 var parry_active = false  # Track if parry is active (successful)
 var parry_timer = 0.0  # Timer to track the parry window
+
+var attack_pattern_a = [
+	{ "delay": 0.5, "attack_damage" : 5},
+	{ "delay": 0.5, "attack_damage" : 5},
+	{ "delay": 1.5, "attack_damage" : 5},
+]
+
 
 
 func _process(delta):
@@ -108,7 +114,7 @@ func _input(event):
 		player_attacking = true
 	# Player parry logic
 	if event.is_action_pressed("parry"):
-		if parry_cooldown <= 0 and not parry_active:  # Only initiate parry if cooldown is over
+		if parry_cooldown <= 0 and not parry_active:  # Only initiate parry if cooldown is over and player isn't parrying
 			print("Player parrying...")
 			parry_active = true  # Activate parry
 			parry_timer = parry_window_duration  # Set the timer for the parry window
@@ -116,8 +122,7 @@ func _input(event):
 			print("Parry is on cooldown. Please wait.")
 
 	# Check if enemy attack lands during the parry window
-	if parry_active and parry_timer > 0 and enemy_attack_progress >= 1.0:
-		enemy_attack_successful = false  # Cancel enemy attack if parried
+	if parry_active and enemy_attack_progress >= 1.0:
 		print("Attack has been deflected successfully!")
 		parry_success_timer = 0.5  # Set timer to hide parry icon
 		parry_active = false  # End the parry window once it is completed
@@ -126,8 +131,6 @@ func start_enemy_attack():
 	enemy_attacking = true
 	enemy_attack_timer = 0.0  # Reset attack timer
 	enemy_attack_progress = 0.0  # Reset attack progress
-	enemy_attack_successful = true  # Assume attack will land unless parried
-	parry_active = false  # Reset parry status
 	parry_timer = 0.0  # Reset parry timer
 	
 func enemy_attack_lands():
@@ -142,6 +145,7 @@ func enemy_attack_lands():
 		%PlayerHitTimer.start()
 		%Player.hide()
 		%PlayerHurtSound.play()
+	parry_active = false  # Reset parry status
 	enemy_attacking = false  # Stop attack state
 	enemy_attack_progress = 0.0  # Reset bar
 	enemy_attack_bar.value = 0.0  # Reset bar visual

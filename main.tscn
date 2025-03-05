@@ -221,6 +221,5 @@ stream = ExtResource("5_dg0r7")
 attenuation = 2.0
 
 [connection signal="timeout" from="Player/PlayerHitTimer" to="." method="_on_player_hit_timer_timeout"]
-[connection signal="timeout" from="Player/PlayerHitTimer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="Player/PlayerFatiguedTimer" to="." method="_on_player_fatigued_timer_timeout"]
 [connection signal="timeout" from="Enemy/EnemyHitTimer" to="." method="_on_enemy_hit_timer_timeout"]

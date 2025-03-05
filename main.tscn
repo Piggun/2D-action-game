@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://cppt2mpb26gh4"]
 
-[ext_resource type="Script" path="res://CombatSystem.gd" id="1_6ilnu"]
+[ext_resource type="Script" uid="uid://bk03wlthkq86j" path="res://CombatSystem.gd" id="1_6ilnu"]
 [ext_resource type="Texture2D" uid="uid://dur7nq7mopiwo" path="res://sprites/ninja.png" id="2_k7hot"]
 [ext_resource type="Texture2D" uid="uid://bp5yk8s2tkwuv" path="res://sprites/goblin.peasant.png" id="3_t7831"]
 [ext_resource type="Texture2D" uid="uid://c3i30ua3vqp3j" path="res://sprites/sword_icon.png" id="4_05k84"]
@@ -108,6 +108,11 @@ wait_time = 0.05
 unique_name_in_owner = true
 stream = ExtResource("4_mufwu")
 pitch_scale = 1.5
+
+[node name="PlayerFatiguedTimer" type="Timer" parent="Player"]
+unique_name_in_owner = true
+wait_time = 2.0
+one_shot = true
 
 [node name="Enemy" type="Node2D" parent="."]
 unique_name_in_owner = true
@@ -218,4 +223,5 @@ attenuation = 2.0
 
 [connection signal="timeout" from="Player/PlayerHitTimer" to="." method="_on_player_hit_timer_timeout"]
 [connection signal="timeout" from="Player/PlayerHitTimer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="Player/PlayerFatiguedTimer" to="." method="_on_player_fatigued_timer_timeout"]
 [connection signal="timeout" from="Enemy/EnemyHitTimer" to="." method="_on_enemy_hit_timer_timeout"]

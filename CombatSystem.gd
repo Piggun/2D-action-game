@@ -11,7 +11,7 @@ extends Node2D
 var player_health = 100
 var player_stamina = 100
 var player_attack_stamina_usage = 20
-var player_stamina_recovery_rate = 10
+var player_stamina_recovery_rate = 20
 var player_attack_damage = 10
 var player_attacking = false
 var player_attack_speed = 2.0
@@ -20,6 +20,7 @@ var parry_window_duration = 0.3  # Parry window lasts for 0.3 seconds
 var parry_cooldown = 0.0  # Cooldown after a parry before initiating another one
 var parry_cooldown_duration = 0.5  # Cooldown period after parry
 var parry_success_timer = 0.0  # Timer to track the duration of successful parry icon
+var player_fatigued = false # Out of stamina
 
 # Enemy Variables
 var enemy_health = 100
@@ -38,9 +39,13 @@ func _process(delta):
 	enemy_health_bar.value = enemy_health
 	player_stamina_bar.value = player_stamina
 
-	if player_stamina <= 100:
-		player_stamina += player_stamina_recovery_rate * delta  #  Gradually recovers stamina
-		player_stamina = min(player_stamina, 100)  # Ensures it never exceeds 100
+	if player_stamina == 0 and not player_fatigued:
+		player_fatigued = true
+		print("Out of stamina!")
+		%PlayerFatiguedTimer.start()
+		
+	if player_stamina <= 100 and not player_attacking and not player_fatigued:
+		recover_stamina(delta)
 	
 	# Player attack logic
 	if player_attacking:
@@ -95,8 +100,8 @@ func _process(delta):
 
 func _input(event):
 	# Player starts attack when pressing "attack"
-	if event.is_action_pressed("attack") and not player_attacking and player_stamina >= player_attack_stamina_usage:
-		player_stamina -= player_attack_stamina_usage
+	if event.is_action_pressed("attack") and not player_attacking and not player_fatigued:
+		player_stamina = max(player_stamina - player_attack_stamina_usage, 0)  # Ensures it never goes below 0
 		player_attacking = true
 	# Player parry logic
 	if event.is_action_pressed("parry"):
@@ -137,9 +142,18 @@ func enemy_attack_lands():
 	enemy_attacking = false  # Stop attack state
 	enemy_attack_progress = 0.0  # Reset bar
 	enemy_attack_bar.value = 0.0  # Reset bar visual
+	
+func recover_stamina(delta):
+		player_stamina += player_stamina_recovery_rate * delta  #  Gradually recovers stamina
+		player_stamina = min(player_stamina, 100)  # Ensures it never exceeds 100
 
 func _on_player_hit_timer_timeout() -> void:
 	%Player.show()
 
 func _on_enemy_hit_timer_timeout() -> void:
 	%Enemy.show()
+
+func _on_player_fatigued_timer_timeout() -> void:
+	print("Stamina recover started")
+	player_fatigued = false
+	player_stamina += 1

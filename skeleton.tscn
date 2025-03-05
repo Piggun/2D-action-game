@@ -110,6 +110,7 @@ bones = ["hip", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 internal_vertex_count = 3
 
 [node name="skeleton" type="Skeleton2D" parent="polygons"]
+rotation = -3.29455e-05
 modification_stack = SubResource("SkeletonModificationStack2D_2hvm2")
 
 [node name="hip" type="Bone2D" parent="polygons/skeleton"]
@@ -133,7 +134,6 @@ bone_angle = 0.0
 
 [node name="arm_right" type="Bone2D" parent="polygons/skeleton/hip/chest"]
 position = Vector2(-120, -120)
-rotation = -0.000181358
 rest = Transform2D(1, 0, 0, 1, -120, -120)
 
 [node name="hand_right" type="Bone2D" parent="polygons/skeleton/hip/chest/arm_right"]
@@ -188,7 +188,7 @@ metadata/_local_pose_override_enabled_ = true
 
 [node name="foot_right_target" type="Node2D" parent="IK Targets"]
 position = Vector2(80, 832)
-rotation = 0.00174775
+rotation = -0.867822
 
 [node name="foot_lookat" type="Node2D" parent="IK Targets/foot_right_target"]
 position = Vector2(167.874, -72.2935)
@@ -205,3 +205,4 @@ position = Vector2(264, 568)
 
 [node name="head_target" type="Node2D" parent="IK Targets"]
 position = Vector2(192, 320)
+rotation = -0.0818876

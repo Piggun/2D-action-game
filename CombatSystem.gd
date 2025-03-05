@@ -6,12 +6,14 @@ extends Node2D
 @onready var parry_success = $ParrySuccess
 @onready var player_attack_bar = %PlayerAttackBar
 @onready var enemy_attack_bar = %EnemyAttackBar
+@onready var player_fatigued_timer = %PlayerFatiguedTimer
 
 # Player Variables
 var player_health = 100
 var player_stamina = 100
 var player_attack_stamina_usage = 20
 var player_stamina_recovery_rate = 20
+var player_stamina_recovery_delay = 2
 var player_attack_damage = 10
 var player_attacking = false
 var player_attack_speed = 2.0
@@ -34,6 +36,7 @@ var enemy_attack_successful = false  # Track if enemy attack lands
 var parry_active = false  # Track if parry is active (successful)
 var parry_timer = 0.0  # Timer to track the parry window
 
+
 func _process(delta):
 	player_health_bar.value = player_health
 	enemy_health_bar.value = enemy_health
@@ -42,7 +45,7 @@ func _process(delta):
 	if player_stamina == 0 and not player_fatigued:
 		player_fatigued = true
 		print("Out of stamina!")
-		%PlayerFatiguedTimer.start()
+		%PlayerFatiguedTimer.start(player_stamina_recovery_delay)
 		
 	if player_stamina <= 100 and not player_attacking and not player_fatigued:
 		recover_stamina(delta)

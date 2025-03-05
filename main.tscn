@@ -111,7 +111,6 @@ pitch_scale = 1.5
 
 [node name="PlayerFatiguedTimer" type="Timer" parent="Player"]
 unique_name_in_owner = true
-wait_time = 2.0
 one_shot = true
 
 [node name="Enemy" type="Node2D" parent="."]

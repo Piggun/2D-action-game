@@ -35,11 +35,45 @@ var enemy_attack_progress = 0.0
 var parry_active = false  # Track if parry is active (successful)
 var parry_timer = 0.0  # Timer to track the parry window
 
-var attack_pattern_a = [
-	{ "delay": 0.5, "attack_damage" : 5},
-	{ "delay": 0.5, "attack_damage" : 5},
-	{ "delay": 1.5, "attack_damage" : 5},
+
+# <--------------------TESTING ATTACK PATTERNS -------------------------------->
+var attack_pattern_A = [
+	{ "delay": 0.5, "attack_type" : "light"},
+	{ "delay": 0.5, "attack_type" : "light"},
+	{ "delay": 1.5, "attack_type" : "heavy"}
 ]
+
+# Variables to manage the pattern execution
+var current_pattern = []
+var current_step = 0
+var pattern_timer = 0.0
+var pattern_active = false
+
+func start_attack_pattern():
+	current_pattern = attack_pattern_A
+	current_step = 0
+	pattern_active = true
+	pattern_timer = current_pattern[0]["delay"]
+	print("Starting Pattern A")
+	
+func execute_attack_step(step: Dictionary) -> void:
+	var type = step["attack_type"]
+	start_enemy_attack()
+	match type:
+		"light":
+			print("Enemy performs a light attack")
+			# Add logic for a light attack here
+		"heavy":
+			print("Enemy performs a heavy attack")
+			# Add logic for a heavy attack here
+		"break":
+			print("Enemy takes a break")
+			# Add logic for a break (wind-up, pause, etc.) here
+
+
+func _ready():
+	start_attack_pattern()
+# <---------------------------------------------------------------------------->
 
 
 
@@ -47,6 +81,22 @@ func _process(delta):
 	player_health_bar.value = player_health
 	enemy_health_bar.value = enemy_health
 	player_stamina_bar.value = player_stamina
+	
+	
+# <--------------------TESTING ATTACK PATTERNS -------------------------------->
+	if pattern_active:
+		pattern_timer -= delta
+		print(pattern_timer)
+		if pattern_timer <= 0:
+			execute_attack_step(current_pattern[current_step])
+			current_step += 1
+			if current_step < current_pattern.size():
+				pattern_timer = current_pattern[current_step]["delay"]
+			else:
+				pattern_active = false
+				print("Pattern finished")
+# <---------------------------------------------------------------------------->
+
 
 	if player_stamina == 0 and not player_fatigued:
 		player_fatigued = true
@@ -75,8 +125,8 @@ func _process(delta):
 	if not enemy_attacking:
 		enemy_attack_timer += delta  # Only increase timer when enemy isn't attacking
 	
-	if enemy_attack_timer >= enemy_attack_interval and not enemy_attacking:
-		start_enemy_attack()
+	#if enemy_attack_timer >= enemy_attack_interval and not enemy_attacking:
+		#start_enemy_attack()
 #
 	if enemy_attacking:
 		enemy_attack_progress += enemy_attack_speed * delta
@@ -161,6 +211,6 @@ func _on_enemy_hit_timer_timeout() -> void:
 	%Enemy.show()
 
 func _on_player_fatigued_timer_timeout() -> void:
-	print("Stamina recover started")
+	print("Stamina recovery started")
 	player_fatigued = false
 	player_stamina += 1

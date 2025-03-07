@@ -30,14 +30,16 @@ var enemy_attack_damage = 10
 var enemy_attacking = false
 var enemy_attack_speed = 2.0
 var enemy_attack_timer = 0.0
-var enemy_attack_interval = 2.5  # Time between enemy attacks
+#var enemy_attack_interval = 2.5  # Time between enemy attacks
 var enemy_attack_progress = 0.0
 var parry_active = false  # Track if parry is active (successful)
 var parry_timer = 0.0  # Timer to track the parry window
+var enemy_can_attack = true  
 
 
 # <--------------------TESTING ATTACK PATTERNS -------------------------------->
 var attack_pattern_A = [
+	{ "delay": 0.5, "attack_type" : "light"},
 	{ "delay": 0.5, "attack_type" : "light"},
 	{ "delay": 0.5, "attack_type" : "light"},
 	{ "delay": 1.5, "attack_type" : "heavy"}
@@ -76,6 +78,11 @@ func _ready():
 # <---------------------------------------------------------------------------->
 
 
+func wait_for_enemy_attack_to_finish() -> void:
+	while enemy_attacking:
+		await get_tree().process_frame
+
+
 
 func _process(delta):
 	player_health_bar.value = player_health
@@ -87,7 +94,7 @@ func _process(delta):
 	if pattern_active:
 		pattern_timer -= delta
 		print(pattern_timer)
-		if pattern_timer <= 0:
+		if pattern_timer <= 0 and enemy_can_attack:
 			execute_attack_step(current_pattern[current_step])
 			current_step += 1
 			if current_step < current_pattern.size():
@@ -122,15 +129,17 @@ func _process(delta):
 			player_attack_bar.value = 0.0  # Reset bar visual
 
 	# Enemy attack logic
-	if not enemy_attacking:
-		enemy_attack_timer += delta  # Only increase timer when enemy isn't attacking
+	#if not enemy_attacking:
+		#enemy_attack_timer += delta  # Only increase timer when enemy isn't attacking
 	
 	#if enemy_attack_timer >= enemy_attack_interval and not enemy_attacking:
 		#start_enemy_attack()
 #
 	if enemy_attacking:
+		enemy_can_attack = false
 		enemy_attack_progress += enemy_attack_speed * delta
 		enemy_attack_bar.value = 100 * enemy_attack_progress  # Fill up the enemy attack bar
+		enemy_attack_timer += delta
 		
 		if enemy_attack_progress >= 1.0:
 			enemy_attack_lands()
@@ -199,6 +208,7 @@ func enemy_attack_lands():
 	enemy_attacking = false  # Stop attack state
 	enemy_attack_progress = 0.0  # Reset bar
 	enemy_attack_bar.value = 0.0  # Reset bar visual
+	enemy_can_attack = true
 	
 func recover_stamina(delta):
 		player_stamina += player_stamina_recovery_rate * delta  #  Gradually recovers stamina

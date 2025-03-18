@@ -27,6 +27,8 @@ var player_fatigued = false # Out of stamina
 # Enemy Variables
 var enemy_health = 100
 var enemy_attack_damage = 10
+var enemy_attack_multiplier = 2.0
+var enemy_attack_type = "light"
 var enemy_attacking = false
 var enemy_attack_speed = 2.0
 var enemy_attack_timer = 0.0
@@ -60,17 +62,16 @@ func start_attack_pattern():
 	
 func execute_attack_step(step: Dictionary) -> void:
 	var type = step["attack_type"]
-	start_enemy_attack()
 	match type:
 		"light":
 			print("Enemy performs a light attack")
-			# Add logic for a light attack here
+			enemy_attack_type = type
+			start_enemy_attack()
 		"heavy":
-			print("Enemy performs a heavy attack")
-			# Add logic for a heavy attack here
+			enemy_attack_type = type
+			start_enemy_attack()
 		"break":
 			print("Enemy takes a break")
-			# Add logic for a break (wind-up, pause, etc.) here
 
 
 func _ready():
@@ -200,7 +201,10 @@ func enemy_attack_lands():
 		parry_success_timer = 0.5  # Set timer to hide parry icon
 	else:
 		print("Enemy Attack Hit!")  # Player didn't parry successfully
-		player_health -= enemy_attack_damage
+		if enemy_attack_type == "light":
+			player_health -= enemy_attack_damage
+		if enemy_attack_type == "heavy":
+			player_health -= enemy_attack_damage * enemy_attack_multiplier
 		%PlayerHitTimer.start()
 		%Player.hide()
 		%PlayerHurtSound.play()

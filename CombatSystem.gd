@@ -123,8 +123,10 @@ func _process(delta):
 		player_attack_bar.value = 100 * player_attack_progress
 		
 		if player_attack_progress >= 1.0:
+			#TODO - Put the following code in a function like "player_attack_lands"
 			print("Player Attack Hit!")
 			enemy_health -= player_attack_damage
+			show_damage_number(player_attack_damage, %EnemySprite2D.position + Vector2(-15, -130))
 			%EnemyHitTimer.start()
 			%Enemy.hide()
 			%EnemyHurtSound.play()

@@ -8,6 +8,9 @@ extends Node2D
 @onready var enemy_attack_bar = %EnemyAttackBar
 @onready var player_fatigued_timer = %PlayerFatiguedTimer
 
+var floating_damage_number = preload("res://floating_damage_number.tscn")
+
+
 # Player Variables
 var player_health = 100
 var player_stamina = 100
@@ -28,6 +31,7 @@ var player_fatigued = false # Out of stamina
 var enemy_health = 100
 var enemy_attack_damage = 10
 var enemy_attack_multiplier = 2.0
+var enemy_heavy_attack_damage = enemy_attack_damage * enemy_attack_multiplier
 var enemy_attack_type = "light"
 var enemy_attacking = false
 var enemy_attack_speed = 2.0
@@ -94,7 +98,6 @@ func _process(delta):
 # <--------------------TESTING ATTACK PATTERNS -------------------------------->
 	if pattern_active:
 		pattern_timer -= delta
-		print(pattern_timer)
 		if pattern_timer <= 0 and enemy_can_attack:
 			execute_attack_step(current_pattern[current_step])
 			current_step += 1
@@ -203,8 +206,10 @@ func enemy_attack_lands():
 		print("Enemy Attack Hit!")  # Player didn't parry successfully
 		if enemy_attack_type == "light":
 			player_health -= enemy_attack_damage
+			show_damage_number(enemy_attack_damage, %PlayerSprite2D.position + Vector2(-10, -120))
 		if enemy_attack_type == "heavy":
-			player_health -= enemy_attack_damage * enemy_attack_multiplier
+			player_health -= enemy_heavy_attack_damage
+			show_damage_number(enemy_heavy_attack_damage, %PlayerSprite2D.position + Vector2(-10, -120))
 		%PlayerHitTimer.start()
 		%Player.hide()
 		%PlayerHurtSound.play()
@@ -217,6 +222,13 @@ func enemy_attack_lands():
 func recover_stamina(delta):
 		player_stamina += player_stamina_recovery_rate * delta  #  Gradually recovers stamina
 		player_stamina = min(player_stamina, 100)  # Ensures it never exceeds 100
+
+func show_damage_number(damage: int, spawn_position: Vector2) -> void:
+		var dmg_instance = floating_damage_number.instantiate()
+		dmg_instance.get_node("DamageLabel").text = str(damage)
+		dmg_instance.position = spawn_position
+		get_tree().current_scene.add_child(dmg_instance)
+
 
 func _on_player_hit_timer_timeout() -> void:
 	%Player.show()

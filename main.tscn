@@ -91,6 +91,7 @@ script = ExtResource("1_6ilnu")
 
 [node name="Player" type="Node2D" parent="."]
 unique_name_in_owner = true
+scale = Vector2(1.00284, 1)
 
 [node name="PlayerSprite2D" type="Sprite2D" parent="Player"]
 unique_name_in_owner = true
@@ -175,6 +176,7 @@ offset_left = 32.0
 offset_top = 48.0
 offset_right = 332.0
 offset_bottom = 63.0
+scale = Vector2(1.01302, 0.982896)
 theme_override_styles/background = SubResource("StyleBoxFlat_d0vpo")
 theme_override_styles/fill = SubResource("StyleBoxFlat_g4ko1")
 value = 100.0

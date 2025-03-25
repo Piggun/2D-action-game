@@ -26,6 +26,7 @@ var parry_cooldown = 0.0  # Cooldown after a parry before initiating another one
 var parry_cooldown_duration = 0.5  # Cooldown period after parry
 var parry_success_timer = 0.0  # Timer to track the duration of successful parry icon
 var player_fatigued = false # Out of stamina
+var player_alive = true
 
 # Enemy Variables
 var enemy_health = 100
@@ -56,6 +57,7 @@ var current_pattern = []
 var current_step = 0
 var pattern_timer = 0.0
 var pattern_active = false
+
 
 func start_attack_pattern():
 	current_pattern = attack_pattern_A
@@ -94,6 +96,9 @@ func _process(delta):
 	enemy_health_bar.value = enemy_health
 	player_stamina_bar.value = player_stamina
 	
+	if player_health <= 0.0:
+		player_alive = false
+	
 	
 # <--------------------TESTING ATTACK PATTERNS -------------------------------->
 	if pattern_active:
@@ -106,6 +111,10 @@ func _process(delta):
 			else:
 				pattern_active = false
 				print("Pattern finished")
+				var time_between_attack_patterns = randf_range(1,4)
+				await get_tree().create_timer(time_between_attack_patterns).timeout
+				if player_alive:
+					start_attack_pattern()
 # <---------------------------------------------------------------------------->
 
 
@@ -126,7 +135,7 @@ func _process(delta):
 			#TODO - Put the following code in a function like "player_attack_lands"
 			print("Player Attack Hit!")
 			enemy_health -= player_attack_damage
-			show_damage_number(player_attack_damage, %EnemySprite2D.position + Vector2(-15, -130))
+			show_damage_number(player_attack_damage, %EnemySprite2D.position + Vector2(-20, -150))
 			%EnemyHitTimer.start()
 			%Enemy.hide()
 			%EnemyHurtSound.play()
@@ -208,10 +217,10 @@ func enemy_attack_lands():
 		print("Enemy Attack Hit!")  # Player didn't parry successfully
 		if enemy_attack_type == "light":
 			player_health -= enemy_attack_damage
-			show_damage_number(enemy_attack_damage, %PlayerSprite2D.position + Vector2(-15, -130))
+			show_damage_number(enemy_attack_damage, %PlayerSprite2D.position + Vector2(-20, -150))
 		if enemy_attack_type == "heavy":
 			player_health -= enemy_heavy_attack_damage
-			show_damage_number(enemy_heavy_attack_damage, %PlayerSprite2D.position + Vector2(-15, -130))
+			show_damage_number(enemy_heavy_attack_damage, %PlayerSprite2D.position + Vector2(-20, -150))
 		%PlayerHitTimer.start()
 		%Player.hide()
 		%PlayerHurtSound.play()

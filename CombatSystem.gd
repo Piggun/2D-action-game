@@ -206,10 +206,10 @@ func enemy_attack_lands():
 		print("Enemy Attack Hit!")  # Player didn't parry successfully
 		if enemy_attack_type == "light":
 			player_health -= enemy_attack_damage
-			show_damage_number(enemy_attack_damage, %PlayerSprite2D.position + Vector2(-10, -120))
+			show_damage_number(enemy_attack_damage, %PlayerSprite2D.position + Vector2(-15, -130))
 		if enemy_attack_type == "heavy":
 			player_health -= enemy_heavy_attack_damage
-			show_damage_number(enemy_heavy_attack_damage, %PlayerSprite2D.position + Vector2(-10, -120))
+			show_damage_number(enemy_heavy_attack_damage, %PlayerSprite2D.position + Vector2(-15, -130))
 		%PlayerHitTimer.start()
 		%Player.hide()
 		%PlayerHurtSound.play()
